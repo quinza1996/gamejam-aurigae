@@ -1,0 +1,35 @@
+{
+  "name": "itchy_bytes",
+  "description": "",
+  "readme": "",
+  "repository": "https://github.com/marpri-17/gamejam-aurigae",
+  "version": "0.0.1",
+  "dependencies": {
+    "natives": "^1.1.6",
+    "phaser": "^3.16.2"
+  },
+  "devDependencies": {
+    "bower": "^1.8.12",
+    "gulp": "^4.0.2",
+    "gulp-concat": "*",
+    "gulp-connect": "^5.7.0",
+    "gulp-download": "*",
+    "gulp-jshint": "*",
+    "gulp-minify-css": "*",
+    "gulp-minify-html": "*",
+    "gulp-processhtml": "*",
+    "gulp-rename": "*",
+    "gulp-rimraf": "*",
+    "gulp-uglify": "*",
+    "gulp-util": "*",
+    "gulp-watch": "^5.0.1",
+    "jshint": "^2.10.2",
+    "tiny-lr": "*"
+  },
+  "scripts": {
+    "postinstall": "bower install",
+    "start": "gulp",
+    "build": "gulp build",
+    "lint": "gulp lint"
+  }
+}
