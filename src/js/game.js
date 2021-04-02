@@ -1,3 +1,7 @@
+const LIVES = 3;
+const COINS_TO_LIVE = 50;
+const INVULNERABILITY_TIME = 10;
+
 var config = {
   type: Phaser.AUTO,
   width: 800,
@@ -17,8 +21,9 @@ var config = {
 };
 
 var score = 0;
-var playerHealth = 3;
-var timeLeft = 10;
+var playerHealth = LIVES;
+const lives = [null, null, null];
+var timeLeft = INVULNERABILITY_TIME;
 var timedLoop, loopObjects;
 var game = new Phaser.Game(config);
 
@@ -89,14 +94,15 @@ function create () {
     this.physics.add.collider(this.player, this.bricks, collideBrick, null, this);
     this.physics.add.collider(this.player, this.coins, collectCoin, null, this);
 
+    for (var i = 0; i < playerHealth; i++) {
+      lives[i] = this.add.image(75 + 40 * i, 70, "heart");
+    }
+
     //   lives = game.add.group();
     //   lives.fixedToCamera = true;
     //   for (var i = 0; i < playerHealth; i++) {
     //     lives.create(300 - i * 30, 0, "heart");
     //   }
-    this.lives1 = this.add.image(75, 70, "heart");
-    this.lives2 = this.add.image(115, 70, "heart");
-    this.lives3 = this.add.image(155, 70, "heart");
 
     this.scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#ff0066' });
     this.timeLeftText = this.add.text(600, 16, 'Time: 10', { fontSize: '32px', fill: '#5CFFFC'});
@@ -127,6 +133,9 @@ function update() {
   this.spaceBar = this.input.keyboard.addKey(
     Phaser.Input.Keyboard.KeyCodes.SPACE
   );
+  this.enter = this.input.keyboard.addKey(
+    Phaser.Input.Keyboard.KeyCodes.ENTER
+  );
 
   if (this.cursors.left.isDown) {
     this.player.setVelocityX(-200);
@@ -145,6 +154,10 @@ function update() {
     this.player.anims.play("turn");
   }
 
+    
+  if (this.cursors.up.isDown && this.player.body.touching.down)
+    this.player.setVelocityY(-330);
+
   if (this.spaceBar.isDown && timeLeft === 0) {
     this.time.addEvent({
       delay: 3000,
@@ -154,9 +167,11 @@ function update() {
     this.player.setScale(1.5);
     this.player.invulnerable = true;
   }
-  if (this.cursors.up.isDown && this.player.body.touching.down)
-    this.player.setVelocityY(-330);
-}
+
+  if (this.enter.isDown && playerHealth == 1) {
+    location.reload();
+  }
+} 
 
 function updateCounter() {
   if (timeLeft === 0) {
@@ -170,7 +185,7 @@ function updateCounter() {
 function invulnerabilityModeOff() {
   if (this.player.invulnerable) {
     this.player.invulnerable = false;
-    timeLeft = 10;
+    timeLeft = INVULNERABILITY_TIME;
     this.player.setScale(1);
   }
 }
@@ -180,15 +195,11 @@ function collideBrick (player, brick) {
     if (this.player.invulnerable)
       return false;
 
+    lives[playerHealth-1].destroy();
+
     if (playerHealth > 1) {
       playerHealth--;
-      if (playerHealth == 2) {
-        this.lives3.destroy();
-      } else if (playerHealth == 1) {
-        this.lives2.destroy();
-      }
     } else {
-        this.lives1.destroy();
         this.dead.play();
         this.music.stop();
         this.physics.pause();
@@ -200,6 +211,10 @@ function collideBrick (player, brick) {
             fontSize: '64px',
             fill: '#fff'
         });
+        this.gameOverText = this.add.text(170, 250, 'Press Enter to retry', {
+          fontSize: '35px',
+          fill: '#fff'
+      });
         //this.scene.remove();
     }
 
@@ -218,14 +233,9 @@ function collectCoin(sprite, coin) {
   score++;
   this.scoreText.setText("Score: " + score);
 
-  if (score % 50 == 0) {
+  if (playerHealth < LIVES && score % COINS_TO_LIVE == 0) {
+    lives[playerHealth] = this.add.image(75 + 40*playerHealth, 70, "heart");
     playerHealth++;
-    if (playerHealth == 3)
-      this.lives3 = this.add.image(155, 70, "heart");
-    else if (playerHealth == 2)
-      this.lives2 = this.add.image(115, 70, "heart");
-    else if (playerHealth == 1)
-      this.lives1 = this.add.image(75, 70, "heart");
   }
 
   createBody(this.coins, "coin");
@@ -237,9 +247,9 @@ function generateObjects() {
   var result = Math.random() * (100 - 1) + 1;
 
   if (this.player.invulnerable) {
-    for (i = 0; i < 10; i++)
+    for (let i = 0; i < 10; i++)
       createBody(this.coins, 'coin');
-    for (i = 0; i < 2; i++)
+    for (let i = 0; i < 2; i++)
       createBody(this.bricks, 'brick');
   } else {
     if (result < 30) createBody(this.coins, 'coin');

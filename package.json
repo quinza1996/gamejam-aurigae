@@ -1,9 +1,9 @@
 {
-  "name": "what",
+  "name": "itchy_bytes",
   "description": "",
   "readme": "",
-  "repository": "https://github.com/RubenUU/what",
-  "version": "0.0.0",
+  "repository": "https://github.com/marpri-17/gamejam-aurigae",
+  "version": "0.0.1",
   "dependencies": {
     "natives": "^1.1.6",
     "phaser": "^3.16.2"
