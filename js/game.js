@@ -28,14 +28,14 @@ var timedLoop, loopObjects;
 var game = new Phaser.Game(config);
 
 function preload() {
-  this.load.image("background", "assets/bg-game.jpg");
-  this.load.spritesheet('bird', 'assets/pajaro90b.png', { frameWidth: 81, frameHeight: 48 });
-  this.load.image("brick", "assets/bug.png");
-  this.load.image("heart", "assets/CORAZON.png");
+  this.load.image("background", "../assets/bg-game.jpg");
+  this.load.spritesheet('bird', '../assets/pajaro90b.png', { frameWidth: 81, frameHeight: 48 });
+  this.load.image("brick", "../assets/bug.png");
+  this.load.image("heart", "../assets/CORAZON.png");
 
-  this.load.image("coin", "assets/coinGold.png");
-  this.load.audio("dead", "assets/audio/dead1.mp3");
-  this.load.audio("loop", "assets/audio/ItchyBits.mp3");
+  this.load.image("coin", "../assets/coinGold.png");
+  this.load.audio("dead", "../assets/audio/dead1.mp3");
+  this.load.audio("loop", "../assets/audio/ItchyBits.mp3");
 }
 
 function create () {
